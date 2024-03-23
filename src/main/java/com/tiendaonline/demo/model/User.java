@@ -9,10 +9,11 @@ public class User {
     private Address address;
 
     // Constructor
-    public User(Integer id, String name, String email, Role guest, Address address) {
+    public User(Integer id, String name, String email, Role role, Address address) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.role = role;
         this.address = address;
     }
     

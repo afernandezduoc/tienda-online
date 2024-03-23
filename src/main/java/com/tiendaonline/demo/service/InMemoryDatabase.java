@@ -2,6 +2,7 @@ package com.tiendaonline.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,15 @@ public class InMemoryDatabase {
         return users;
     }
 
+    public Optional<User> getUserById(Integer id) {
+        return users.stream().filter(user -> user.getId().equals(id)).findFirst();
+    }
+
     public List<Address> getAddresses() {
         return addresses;
+    }
+
+    public Optional<Address> getAddressById(Integer id) {
+        return addresses.stream().filter(address -> address.getId().equals(id)).findFirst();
     }
 }
