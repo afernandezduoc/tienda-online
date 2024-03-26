@@ -17,7 +17,7 @@ public class InMemoryDatabase {
     private List<User> users;
     private List<Address> addresses;
 
-    // Los métodos @PostConstruct init() inicializan las listas con datos de prueba al arrancar la aplicación.
+    // El método @PostConstruct init() inicializa las listas con datos de prueba al arrancar la aplicación.
     @PostConstruct
     public void init() {
         // Inicializa las listas de usuarios y direcciones
