@@ -14,7 +14,7 @@ public class Address {
         this.country = country;
     }
     
-    // Getter and Setters
+    // Getters and Setters
     public Integer getId() {
         return id;
     }
