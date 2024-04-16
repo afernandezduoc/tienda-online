@@ -1,6 +1,6 @@
 package com.tiendaonline.demo.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "addresses")
