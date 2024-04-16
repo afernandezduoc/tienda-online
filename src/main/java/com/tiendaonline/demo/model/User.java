@@ -1,12 +1,32 @@
 package com.tiendaonline.demo.model;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue
+    @Column(name = "user_id")
     private Integer id;
+
+    @Column(name = "name", nullable = false, length = 200)
     private String name;
+
+    @Column(name = "email", nullable = false, unique = true, length = 200)
     private String email;
+
+    @Enumerated(EnumType.STRING) 
+    @Column(nullable = false)
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false)
     private Address address;
+
+    // Constructor sin parámetros
+    public User() {
+    }
 
     // Constructor
     public User(Integer id, String name, String email, Role role, Address address) {

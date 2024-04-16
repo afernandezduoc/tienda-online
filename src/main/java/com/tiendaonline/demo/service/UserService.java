@@ -1,36 +1,44 @@
 package com.tiendaonline.demo.service;
 
+import com.tiendaonline.demo.model.User;
+import com.tiendaonline.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-
-import com.tiendaonline.demo.model.User;
-import com.tiendaonline.demo.model.Role;
 
 @Service
 public class UserService {
-    private final InMemoryDatabase inMemoryDatabase;
 
-    // Inyectamos la dependencia de InMemoryDatabase
-    public UserService(InMemoryDatabase inMemoryDatabase) {
-        this.inMemoryDatabase = inMemoryDatabase;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    // Método que devuelve la lista de usuarios
-    public List<User> getUsers() {
-        return inMemoryDatabase.getUsers();
+    // Obtener todos los usuarios
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
-    // Método que devuelve un usuario por su id
-    public Optional<User> getUserById(Integer id) {
-        return inMemoryDatabase.getUserById(id);
+    // Encontrar un usuario por ID
+    public Optional<User> findUserById(Integer id) {
+        return userRepository.findById(id);
     }
 
-    // Método para filtrar usuarios por su rol
-    public List<User> getUsersByRole(Role role) {
-        return inMemoryDatabase.getUsers().stream()
-                .filter(user -> user.getRole().equals(role))
-                .collect(Collectors.toList());
+    // Guardar o actualizar un usuario
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    // Eliminar un usuario
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
+    }
+    
+    // Ejemplo de método para actualizar un usuario
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 }
