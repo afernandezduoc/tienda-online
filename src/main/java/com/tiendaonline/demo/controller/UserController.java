@@ -1,15 +1,11 @@
 package com.tiendaonline.demo.controller;
 
+import com.tiendaonline.demo.model.User;
+import com.tiendaonline.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.tiendaonline.demo.model.User;
-import com.tiendaonline.demo.model.Role;
-import com.tiendaonline.demo.service.UserService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,40 +13,56 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     private final UserService userService;
 
-    // Inyectamos la dependencia de UserService
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // Endpoint que devuelve la lista de usuarios
+    // Obtener todos los usuarios
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-    // Endpoint que devuelve un usuario por su id
+    // Obtener un usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<User> user = userService.findUserById(id);
+        return user.map(ResponseEntity::ok)
+                   .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Endpoint que devuelve la lista de usuarios por su rol
-    @GetMapping("/role/{role}")
-    public ResponseEntity<?> getUsersByRole(@PathVariable("role") String roleString) {
-        Role role;
-        try {
-            role = Role.valueOf(roleString.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El rol no es válido o no existe.");
-        }
+    // Crear un nuevo usuario
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User savedUser = userService.saveUser(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
 
-        List<User> users = userService.getUsersByRole(role);
-        if (users.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron usuarios con el rol: " + roleString);
-        }
-        return ResponseEntity.ok(users);
+    // Actualizar un usuario existente
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) {
+        return userService.findUserById(id)
+                          .map(existingUser -> {
+                              user.setId(id);
+                              User updatedUser = userService.saveUser(user);
+                              return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+                          })
+                          .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Eliminar un usuario
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        return userService.findUserById(id)
+                          .map(user -> {
+                              userService.deleteUser(id);
+                              return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                          })
+                          .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
