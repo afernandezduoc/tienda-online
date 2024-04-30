@@ -1,0 +1,9 @@
+com\tiendaonline\demo\model\Address.class
+com\tiendaonline\demo\service\AddressService.class
+com\tiendaonline\demo\DemoApplication.class
+com\tiendaonline\demo\model\User.class
+com\tiendaonline\demo\repository\AddressRepository.class
+com\tiendaonline\demo\repository\UserRepository.class
+com\tiendaonline\demo\service\UserService.class
+com\tiendaonline\demo\controller\UserController.class
+com\tiendaonline\demo\model\Role.class
